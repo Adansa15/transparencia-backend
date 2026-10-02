@@ -13,19 +13,22 @@ app.use(express.static('public'));
 const PORT = process.env.PORT || 3000;
 const path = require('path');
 
-// --- AUTENTICACIÓN CON GOOGLE SHEETS (OPTIMIZADA PARA RENDER) ---
+// --- AUTENTICACIÓN CON GOOGLE SHEETS (DEFINITIVA PARA RENDER) ---
 let auth;
 if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
-    // Si estamos en Render, usa las variables individuales y formatea los saltos de línea de la llave privada
+    let privateKey = process.env.GOOGLE_PRIVATE_KEY;
+    if (privateKey.includes('\\n')) {
+        privateKey = privateKey.replace(/\\n/g, '\n');
+    }
+
     auth = new google.auth.GoogleAuth({
         credentials: {
             client_email: process.env.GOOGLE_CLIENT_EMAIL,
-            private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+            private_key: privateKey,
         },
         scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 } else {
-    // Si estás en tu computadora local, usa el archivo físico credentials.json
     auth = new google.auth.GoogleAuth({
         keyFile: path.join(__dirname, 'credentials.json'),
         scopes: ['https://www.googleapis.com/auth/spreadsheets'],
