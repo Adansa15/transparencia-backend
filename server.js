@@ -13,27 +13,11 @@ app.use(express.static('public'));
 const PORT = process.env.PORT || 3000;
 const path = require('path');
 
-// --- AUTENTICACIÓN CON GOOGLE SHEETS (DEFINITIVA PARA RENDER) ---
-let auth;
-if (process.env.GOOGLE_CLIENT_EMAIL && process.env.GOOGLE_PRIVATE_KEY) {
-    let privateKey = process.env.GOOGLE_PRIVATE_KEY;
-    if (privateKey.includes('\\n')) {
-        privateKey = privateKey.replace(/\\n/g, '\n');
-    }
-
-    auth = new google.auth.GoogleAuth({
-        credentials: {
-            client_email: process.env.GOOGLE_CLIENT_EMAIL,
-            private_key: privateKey,
-        },
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
-} else {
-    auth = new google.auth.GoogleAuth({
-        keyFile: path.join(__dirname, 'credentials.json'),
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
-}
+// --- AUTENTICACIÓN DIRECTA CON CREDENTIALS.JSON ---
+const auth = new google.auth.GoogleAuth({
+    keyFile: path.join(__dirname, 'credentials.json'),
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
 
 const spreadsheetId = process.env.SPREADSHEET_ID;
 
