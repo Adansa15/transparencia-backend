@@ -279,7 +279,7 @@ cron.schedule('10 10 * * *', async () => {
         await procesarHoja('SolicitudesDIF', 'DIF');
 
         if (solicitudesAtrasadas.length > 0) {
-            let detalleHtml = '<h3>⚠️️ Alerta: Las siguientes solicitudes siguen PENDIENTES y tienen 7 días o más de antigüedad:</h3><ul>';
+            let detalleHtml = '<h3>⚠️ Alerta: Las siguientes solicitudes siguen PENDIENTES y tienen 7 días o más de antigüedad:</h3><ul>';
             solicitudesAtrasadas.forEach(s => {
                 detalleHtml += `<li><b>[${s.origen}]</b> <b>Folio:</b> ${s.folio} | <b>Expediente:</b> ${s.expediente} | <b>Área:</b> ${s.area} | <b>Fecha de Registro:</b> ${s.fecha} (<b>${s.dias} días</b> transcurridos)</li>`;
             });
