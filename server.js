@@ -3,7 +3,6 @@ const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 const cors = require('cors');
-const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -13,9 +12,13 @@ app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
-// --- AUTENTICACIÓN USANDO EL ARCHIVO LOCAL credentials.json ---
+// --- AUTENTICACIÓN OFICIAL CON LAS 2 VARIABLES DE GOOGLE ---
 const auth = new google.auth.GoogleAuth({
-    keyFile: path.join(__dirname, 'credentials.json'),
+    credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        // Limpiamos y formateamos correctamente los saltos de línea de la llave privada
+        private_key: process.env.GOOGLE_PRIVATE_KEY ? process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') : undefined,
+    },
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
