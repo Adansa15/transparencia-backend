@@ -3,6 +3,7 @@ const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -12,9 +13,9 @@ app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
 
-// --- AUTENTICACIÓN USANDO EL ARCHIVO credentials.json ---
+// --- AUTENTICACIÓN USANDO EL ARCHIVO LOCAL credentials.json ---
 const auth = new google.auth.GoogleAuth({
-    keyFile: 'credentials.json',
+    keyFile: path.join(__dirname, 'credentials.json'),
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
@@ -278,7 +279,7 @@ cron.schedule('10 10 * * *', async () => {
         await procesarHoja('SolicitudesDIF', 'DIF');
 
         if (solicitudesAtrasadas.length > 0) {
-            let detalleHtml = '<h3>⚠️ Alerta: Las siguientes solicitudes siguen PENDIENTES y tienen 7 días o más de antigüedad:</h3><ul>';
+            let detalleHtml = '<h3>⚠️️ Alerta: Las siguientes solicitudes siguen PENDIENTES y tienen 7 días o más de antigüedad:</h3><ul>';
             solicitudesAtrasadas.forEach(s => {
                 detalleHtml += `<li><b>[${s.origen}]</b> <b>Folio:</b> ${s.folio} | <b>Expediente:</b> ${s.expediente} | <b>Área:</b> ${s.area} | <b>Fecha de Registro:</b> ${s.fecha} (<b>${s.dias} días</b> transcurridos)</li>`;
             });
