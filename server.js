@@ -11,11 +11,10 @@ app.use(cors());
 app.use(express.static('public'));
 
 const PORT = process.env.PORT || 3000;
-const path = require('path');
 
-// --- AUTENTICACIÓN DIRECTA CON CREDENTIALS.JSON ---
+// --- AUTENTICACIÓN USANDO EL ARCHIVO credentials.json ---
 const auth = new google.auth.GoogleAuth({
-    keyFile: path.join(__dirname, 'credentials.json'),
+    keyFile: 'credentials.json',
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
